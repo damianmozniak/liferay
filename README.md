@@ -4,7 +4,7 @@ Liferay on OpenShift
 This git repository helps you get up and running quickly with Liferay Portal installation
 on OpenShift.  
 
-By default the backend database is MySQL and the database name is the
+By default the backend database is MySQL/Postgresql and the database name is the
 same as your application name (using $_ENV['OPENSHIFT_APP_NAME']).  You can name
 your application and database name to whatever you want.  
 
@@ -22,16 +22,18 @@ Create a JBoss AS 7.1 or JBoss EAP 6.0 server
 	                    (or)
          rhc app create -a $Your-App-Name -t jbosseap-6.0 -g medium
     
-* Note: For deploying Liferay, the application max heap size should be set to 1024m which is available only from medium and above gears, for more info check https://openshift.redhat.com/community/developers/pricing
+* Note: For deploying Liferay, the application max heap size should be set to 512m or above which is available only from medium and above gears, for more info check https://openshift.redhat.com/community/developers/pricing
 	
 Add DB support to your application
 ----------------------------------
           rhc app cartridge add -a $Your-App-Name -c mysql-5.1
           rhc app cartridge add -a $Your-App-Name -c phpmyadmin-3.4 (optional)
+	                    (or)
+	  rhc app cartridge add -a $Your-App-Name -c postgresql-8.4
 		
 Application Info
 ----------------
-        rhc app show -a $Your-App-Name
+          rhc app show -a $Your-App-Name
 
 
 Add this upstream jbossas7-liferay-quickstart repo
@@ -47,10 +49,10 @@ Add this upstream jbossas7-liferay-quickstart repo
 
    That's it, you can now checkout your application at:
 
-         http://$Your-App-Name-$yournamespace.rhcloud.com
+       http://$Your-App-Name-$yournamespace.rhcloud.com
          
 __Note__ : 
-_Sometimes it takes longer time for the server to start and deploy, please watch the status of server on $OPENSHIFT_LOG_DIR/server.log.  It could be due the issue mentioned in **Open Issues**_
+_Sometimes it takes longer time for the server to start and deploy, please watch the status of server on $OPENSHIFT_LOG_DIR/server.log.
 
 Default Credentials
 -------------------
@@ -85,7 +87,8 @@ the JNDI names for the dataources
 		MySQL      - java:jboss/datasources/MysqlDS
 		PostgreSQL - java:jboss/datasources/PostgreSQLDS
 
-By default this quick start will configure MySQL database as default database for the Portal
+By default this quick start will configure either MySQL/Postgresql database as database for the Portal depending on the DB cartridge that was added 
+during the application creation.
 
 This is configured in the $REPO_DIR/customization/ROOT.war/WEB-INF/classes/portal-ext.properties entry,
 	
@@ -94,9 +97,16 @@ This is configured in the $REPO_DIR/customization/ROOT.war/WEB-INF/classes/porta
 If you want to change it to Postgresql then you need to update the $REPO_DIR/customization/ROOT.war/WEB-INF/classes/portal-ext.properties
 
 	jdbc.default.jndi.name=java:jboss/datasources/PostgreSQLDS
+
+__Note__ : 
+
+The datasources name could be changed by updting the file $APP_NAME/.openshift/config/standlone.xml and doing a git push
 	
+
 Upgrade the Portal
 ------------------
+
+Right now the quick start supports only **Liferay Portal 6.1.0-CE.GA1**
 
 In order to update or upgrade to the latest liferay portal, you'll need to re-pull
 and re-push.
@@ -117,16 +127,11 @@ and re-push.
          git push
 
        
-The deploy script will then automatically pull the Liferay Portal war file from the sourceforge site and explode the same over the ROOT.war
+The deploy script will then automatically pull the Liferay Portal war file from the sourceforge site and explode the same over the liferay-portal-6.1.0-ce-ga1-xxxxxx.war
 
 
 Upcoming features
 ----------------
 
 * Standard maven based directory structure for the application and maven deployment
-* Postgresql support for Liferay, import/export sql scripts
 
-Open Issue
-----------
-
-* Right now the JBoss Application server is trying to deploy the Liferay Portal ROOT.war twice, which is making the server delay in deploying portal 
