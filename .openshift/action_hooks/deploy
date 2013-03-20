@@ -6,13 +6,13 @@
 
 set -e
 
-if [ -z "$OPENSHIFT_DB_HOST" ]
+if [ -z "$OPENSHIFT_POSTGRESQL_DB_HOST" ] || [ -z "$OPENSHIFT_MYSQL_DB_HOST" ]
 then
     echo 1>&2
     echo "Could not find mysql database.  Please run:" 1>&2
-    echo "rhc app cartridge add -a $OPENSHIFT_APP_NAME -c mysql-5.1" 1>&2
+    echo "rhc cartridge add -a $OPENSHIFT_APP_NAME -c mysql-5.1" 1>&2
     echo "                  (OR)                                    " 1>&2    	
-    echo "rhc app cartridge add -a $OPENSHIFT_APP_NAME -c postgresql-8.4" 1>&2
+    echo "rhc cartridge add -a $OPENSHIFT_APP_NAME -c postgresql-8.4" 1>&2
     echo "then make a sample commit (add whitespace somewhere) and re-push" 1>&2
     echo 1>&2
 fi
@@ -26,9 +26,9 @@ while [ $RETRY -gt 0 ] ; do
     done
 
     #check for db
-    if [ -n "$OPENSHIFT_DB_HOST" ]
+    if [ -n "$OPENSHIFT_POSTGRESQL_DB_HOST" ] || [ -n "$OPENSHIFT_MYSQL_DB_HOST" ]
     then
-        echo "Database server found at $OPENSHIFT_DB_HOST. initializing..."
+        echo "Database server found initializing..."
         sleep 5
         break
     fi
@@ -37,7 +37,7 @@ while [ $RETRY -gt 0 ] ; do
     RETRY=$(( $RETRY - 1 ))
 done
 
-if [ -z "$OPENSHIFT_DB_HOST" ]
+if [ -z "$OPENSHIFT_POSTGRESQL_DB_HOST" ] && [ -z "$OPENSHIFT_MYSQL_DB_HOST" ]
 then
     exit 5
 fi
@@ -47,14 +47,14 @@ fi
 #
 ## MySql Database
 #
-if [ "3306" = "$OPENSHIFT_DB_PORT" ]
+if [ "3306" = "$OPENSHIFT_MYSQL_DB_PORT" ]
 then
- if ! /usr/bin/mysql -u "$OPENSHIFT_DB_USERNAME" --password="$OPENSHIFT_DB_PASSWORD" -h "$OPENSHIFT_DB_HOST" -e "select * from Account_;" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1
+ if ! /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" -e "select * from Account_;" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1
   then
     echo
     echo "Database '$OPENSHIFT_APP_NAME' found, importing 'portal-minimal-mysql.sql' into database '$OPENSHIFT_APP_NAME'."
     echo
-    /usr/bin/mysql -u "$OPENSHIFT_DB_USERNAME" --password="$OPENSHIFT_DB_PASSWORD" -h "$OPENSHIFT_DB_HOST" "$OPENSHIFT_APP_NAME" < "$OPENSHIFT_REPO_DIR/.openshift/action_hooks/portal-minimal-mysql.sql"
+    /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" "$OPENSHIFT_APP_NAME" < "$OPENSHIFT_REPO_DIR/.openshift/action_hooks/portal-minimal-mysql.sql"
     echo
     echo "done."
     echo "==================================================================================="
@@ -71,14 +71,14 @@ fi
 #
 ## Postgresql Database
 #
-if [ "5432" = "$OPENSHIFT_DB_PORT" ]
+if [ "5432" = "$OPENSHIFT_POSTGRESQL_DB_PORT" ]
  then
-  if ! /usr/bin/psql -U "$OPENSHIFT_DB_USERNAME" -w "$OPENSHIFT_DB_PASSWORD" -h "$OPENSHIFT_DB_HOST" -c "select * from $OPENSHIFT_APP_NAME.Account_" > /dev/null 2>&1
+  if ! /usr/bin/psql -U "$OPENSHIFT_POSTGRESQL_DB_USERNAME" -w "$OPENSHIFT_POSTGRESQL_DB_PASSWORD" -h "$OPENSHIFT_POSTGRESQL_DB_HOST" -c "select * from $OPENSHIFT_APP_NAME.Account_" > /dev/null 2>&1
    then
     echo
     echo "Database '$OPENSHIFT_APP_NAME' found, importing 'portal-minimal-postgresql.sql' into database '$OPENSHIFT_APP_NAME'."
     echo
-    /usr/bin/psql -q -U "$OPENSHIFT_DB_USERNAME" -w "$OPENSHIFT_DB_PASSWORD" -h "$OPENSHIFT_DB_HOST" -d "$OPENSHIFT_APP_NAME" -f "$OPENSHIFT_REPO_DIR/portal-minimal-postgresql.sql"
+    /usr/bin/psql -q -U "$OPENSHIFT_POSTGRESQL_DB_USERNAME" -w "$OPENSHIFT_POSTGRESQL_DB_PASSWORD" -h "$OPENSHIFT_POSTGRESQL_DB_HOST" -d "$OPENSHIFT_APP_NAME" -f "$OPENSHIFT_REPO_DIR/portal-minimal-postgresql.sql"
     echo
     echo "done."
     echo "======================================================================================="

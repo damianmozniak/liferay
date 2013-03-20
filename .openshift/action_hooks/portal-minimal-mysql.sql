@@ -1,4 +1,3 @@
-
 create table Account_ (
 	accountId bigint not null primary key,
 	companyId bigint,
@@ -613,6 +612,7 @@ create table DLFileShortcut (
 ) engine InnoDB;
 
 create table DLFileVersion (
+	uuid_ varchar(75) null,
 	fileVersionId bigint not null primary key,
 	groupId bigint,
 	companyId bigint,
@@ -667,6 +667,7 @@ create table DLSync (
 	repositoryId bigint,
 	parentFolderId bigint,
 	name varchar(255) null,
+	description longtext null,
 	event varchar(75) null,
 	type_ varchar(75) null,
 	version varchar(75) null
@@ -1018,7 +1019,17 @@ create table LayoutSetBranch (
 	privateLayout tinyint,
 	name varchar(75) null,
 	description longtext null,
-	master tinyint
+	master tinyint,
+	logo tinyint,
+	logoId bigint,
+	themeId varchar(75) null,
+	colorSchemeId varchar(75) null,
+	wapThemeId varchar(75) null,
+	wapColorSchemeId varchar(75) null,
+	css longtext null,
+	settings_ longtext null,
+	layoutSetPrototypeUuid varchar(75) null,
+	layoutSetPrototypeLinkEnabled tinyint
 ) engine InnoDB;
 
 create table LayoutSetPrototype (
@@ -1493,6 +1504,7 @@ create table Release_ (
 	buildNumber integer,
 	buildDate datetime null,
 	verified tinyint,
+	state_ integer,
 	testString varchar(1024) null
 ) engine InnoDB;
 
@@ -2135,19 +2147,6 @@ create table VirtualHost (
 	companyId bigint,
 	layoutSetId bigint,
 	hostname varchar(75) null
-) engine InnoDB;
-
-create table Vocabulary (
-	vocabularyId bigint not null primary key,
-	groupId bigint,
-	companyId bigint,
-	userId bigint,
-	userName varchar(75) null,
-	createDate datetime null,
-	modifiedDate datetime null,
-	name varchar(75) null,
-	description varchar(75) null,
-	folksonomy tinyint
 ) engine InnoDB;
 
 create table WebDAVProps (
@@ -2940,7 +2939,7 @@ insert into ListType (listTypeId, name, type_) values (12020, 'public', 'com.lif
 insert into Counter values ('com.liferay.counter.model.Counter', 10000);
 
 
-insert into Release_ (releaseId, createDate, modifiedDate, servletContextName, buildNumber, verified) values (1, now(), now(), 'portal', 6100, 0);
+insert into Release_ (releaseId, createDate, modifiedDate, servletContextName, buildNumber, verified) values (1, now(), now(), 'portal', 6101, 0);
 
 
 create table QUARTZ_BLOB_TRIGGERS (
@@ -3027,7 +3026,7 @@ create table QUARTZ_SIMPLE_TRIGGERS (
 	primary key (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
 ) engine InnoDB;
 
-CREATE TABLE QUARTZ_SIMPROP_TRIGGERS (
+create table QUARTZ_SIMPROP_TRIGGERS (
 	SCHED_NAME varchar(120) not null,
 	TRIGGER_NAME varchar(200) not null,
 	TRIGGER_GROUP varchar(200) not null,

@@ -612,6 +612,7 @@ create table DLFileShortcut (
 );
 
 create table DLFileVersion (
+	uuid_ varchar(75) null,
 	fileVersionId bigint not null primary key,
 	groupId bigint,
 	companyId bigint,
@@ -666,6 +667,7 @@ create table DLSync (
 	repositoryId bigint,
 	parentFolderId bigint,
 	name varchar(255) null,
+	description text null,
 	event varchar(75) null,
 	type_ varchar(75) null,
 	version varchar(75) null
@@ -1017,7 +1019,17 @@ create table LayoutSetBranch (
 	privateLayout bool,
 	name varchar(75) null,
 	description text null,
-	master bool
+	master bool,
+	logo bool,
+	logoId bigint,
+	themeId varchar(75) null,
+	colorSchemeId varchar(75) null,
+	wapThemeId varchar(75) null,
+	wapColorSchemeId varchar(75) null,
+	css text null,
+	settings_ text null,
+	layoutSetPrototypeUuid varchar(75) null,
+	layoutSetPrototypeLinkEnabled bool
 );
 
 create table LayoutSetPrototype (
@@ -1492,6 +1504,7 @@ create table Release_ (
 	buildNumber integer,
 	buildDate timestamp null,
 	verified bool,
+	state_ integer,
 	testString varchar(1024) null
 );
 
@@ -2134,19 +2147,6 @@ create table VirtualHost (
 	companyId bigint,
 	layoutSetId bigint,
 	hostname varchar(75) null
-);
-
-create table Vocabulary (
-	vocabularyId bigint not null primary key,
-	groupId bigint,
-	companyId bigint,
-	userId bigint,
-	userName varchar(75) null,
-	createDate timestamp null,
-	modifiedDate timestamp null,
-	name varchar(75) null,
-	description varchar(75) null,
-	folksonomy bool
 );
 
 create table WebDAVProps (
@@ -2939,7 +2939,7 @@ insert into ListType (listTypeId, name, type_) values (12020, 'public', 'com.lif
 insert into Counter values ('com.liferay.counter.model.Counter', 10000);
 
 
-insert into Release_ (releaseId, createDate, modifiedDate, servletContextName, buildNumber, verified) values (1, current_timestamp, current_timestamp, 'portal', 6100, false);
+insert into Release_ (releaseId, createDate, modifiedDate, servletContextName, buildNumber, verified) values (1, current_timestamp, current_timestamp, 'portal', 6101, false);
 
 
 create table QUARTZ_BLOB_TRIGGERS (
@@ -3026,7 +3026,7 @@ create table QUARTZ_SIMPLE_TRIGGERS (
 	primary key (SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP)
 );
 
-CREATE TABLE QUARTZ_SIMPROP_TRIGGERS (
+create table QUARTZ_SIMPROP_TRIGGERS (
 	SCHED_NAME varchar(120) not null,
 	TRIGGER_NAME varchar(200) not null,
 	TRIGGER_GROUP varchar(200) not null,

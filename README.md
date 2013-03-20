@@ -18,31 +18,33 @@ If you don't have an Openshift account you can create an account at http://opens
 
 Create a JBoss AS 7.1 or JBoss EAP 6.0 server
 ---------------------------------------------
-         rhc app create -a $Your-App-Name -t jbossas-7    -g medium
-	                    (or)
-         rhc app create -a $Your-App-Name -t jbosseap-6.0 -g medium
+
+      *`JBoss AS 7.1`
+
+         rhc app create -a $Your-App-Name -t jbossas-7  mysql-5.1 -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
+
+        rhc app create -a $Your-App-Name -t jbossas-7  postgresql-8.4  -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
+	                    
+      *`JBoss EAP 6.0`
+
+         rhc app create -a $Your-App-Name -t jbosseap-6.0 mysql-5.1 -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
+	
+        rhc app create -a $Your-App-Name -t jbosseap-6.0 postgresql-8.4  -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
     
 * Note: For deploying Liferay, the application max heap size should be set to 512m or above which is available only from medium and above gears, for more info check https://openshift.redhat.com/community/developers/pricing
 	
-Add DB support to your application
-----------------------------------
-          rhc app cartridge add -a $Your-App-Name -c mysql-5.1
+Add DB Web Console to your application
+--------------------------------------
           rhc app cartridge add -a $Your-App-Name -c phpmyadmin-3.4 (optional)
-	                    (or)
-	  rhc app cartridge add -a $Your-App-Name -c postgresql-8.4
 		
 Application Info
 ----------------
           rhc app show -a $Your-App-Name
 
 
-Add this upstream jbossas7-liferay-quickstart repo
---------------------------------------------------
+Start the app
+----------------
 
-        cd $Your-App-Name
-        git remote add upstream -m master git://github.com/openshift/jbossas7-liferay-quickstart
-        git pull -s recursive -X theirs upstream master
-	
    Then push the repo to your openshift cloud repo dir
 
         git push
@@ -106,7 +108,7 @@ The datasources name could be changed by updting the file $APP_NAME/.openshift/c
 Upgrade the Portal
 ------------------
 
-Right now the quick start supports only **Liferay Portal 6.1.0-CE.GA1**
+Right now the quick start supports only **Liferay Portal 6.1.1-CE.GA2**
 
 In order to update or upgrade to the latest liferay portal, you'll need to re-pull
 and re-push.
@@ -120,14 +122,14 @@ and re-push.
         Push the new changes upstream
         -----------------------------
 
-        Update the file and modify the first line with correct war file name that will be used for upgrade default is liferay-portal-6.1.0-ce-ga1-20120106155615760.war, but during update you will change this to something like liferay-portal-6.1.1-ce-ga1-xxxxxxxxx.war
+        Update the file and modify the first line with correct war file name that will be used for upgrade default is liferay-portal-6.1.1-ce-ga2-20120731132656558.war, but during update you will change this to something like liferay-portal-6.1.1-ce-ga2-xxxxxxxxx.war
  
         .openshift/action_hooks/deploying-war-info - the war file of liferay that will be deployed
 
          git push
 
        
-The deploy script will then automatically pull the Liferay Portal war file from the sourceforge site and explode the same over the liferay-portal-6.1.0-ce-ga1-xxxxxx.war
+The deploy script will then automatically pull the Liferay Portal war file from the sourceforge site and explode the same over the liferay-portal-6.1.1-ce-ga2-xxxxxx.war
 
 
 Upcoming features
