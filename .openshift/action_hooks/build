@@ -24,11 +24,11 @@ _LIFERAY_PORTAL_DEPLOY_DIR="${OPENSHIFT_DATA_DIR}liferay"
 #
 ## Create the directory if it does not exist
 #
-if [ ! -d ${_LIFERAY_PORTAL_DEPLOY_DIR} ]
+if [ ! -d "$_LIFERAY_PORTAL_DEPLOY_DIR" ]
  then
-   echo "Creating Liferay Portal Dir ${_LIFERAY_PORTAL_DEPLOY_DIR}"
-   mkdir ${_LIFERAY_PORTAL_DEPLOY_DIR}
-   mkdir ${_LIFERAY_PORTAL_DEPLOY_DIR}/${_LIFERAY_PORTAL_DEPLOYING}
+   echo "Creating Liferay Portal Dir $_LIFERAY_PORTAL_DEPLOY_DIR"
+   mkdir "$_LIFERAY_PORTAL_DEPLOY_DIR"
+   mkdir "$_LIFERAY_PORTAL_DEPLOY_DIR}/$_LIFERAY_PORTAL_DEPLOYING"
 fi
 
 #
@@ -36,14 +36,14 @@ fi
 #
 _CUSTOMIZATION_DIR="${OPENSHIFT_REPO_DIR}/customization"
 
-if [ -f ${OPENSHIFT_DATA_DIR}/deployed-war-info ]
+if [ -e "${OPENSHIFT_DATA_DIR}/deployed-war-info" ]
  then
   _LIFERAY_PORTAL_DEPLOYED=`head -1 ${OPENSHIFT_DATA_DIR}/deployed-war-info`
    echo "Last deployed WAR : ${_LIFERAY_PORTAL_DEPLOYED}"
 fi
 
 #Download the Liferay Portal War
-if [ "${_LIFERAY_PORTAL_DEPLOYING}" = "${_LIFERAY_PORTAL_DEPLOYED}" ]
+if [ "$_LIFERAY_PORTAL_DEPLOYING" = "$_LIFERAY_PORTAL_DEPLOYED" ]
  then
    echo "Portal already deployed, updating portal-*.properties"
    cp -ra ${_CUSTOMIZATION_DIR}/ROOT.war ${_LIFERAY_PORTAL_DEPLOY_DIR}
@@ -54,7 +54,7 @@ if [ "${_LIFERAY_PORTAL_DEPLOYING}" = "${_LIFERAY_PORTAL_DEPLOYED}" ]
    #Downlad the war
    wget -O ${_LIFERAY_PORTAL_DEPLOYING}  -v "http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.1.1%20GA2/${_LIFERAY_PORTAL_DEPLOYING}"
    cd ${_LIFERAY_PORTAL_DEPLOY_DIR}/${_LIFERAY_PORTAL_DEPLOYING}
-   if [ -f ${OPENSHIFT_TMP_DIR}/${_LIFERAY_PORTAL_DEPLOYING} ]
+   if [ -d ${OPENSHIFT_TMP_DIR}/${_LIFERAY_PORTAL_DEPLOYING} ]
     then
        echo "Extracting the Liferay Portal ${_LIFERAY_PORTAL_DEPLOYING} as default application ROOT.war"
        jar -xvf ${OPENSHIFT_TMP_DIR}/${_LIFERAY_PORTAL_DEPLOYING}
