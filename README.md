@@ -19,13 +19,13 @@ If you don't have an Openshift account you can create an account at http://opens
 Create a JBoss AS 7.1 or JBoss EAP 6.0 server
 ---------------------------------------------
 
-      *`JBoss AS 7.1`
+      **`JBoss AS 7.1`**
 
         rhc app create -a $Your-App-Name -t jbossas-7  mysql-5.1 -g medium
 
         rhc app create -a $Your-App-Name -t jbossas-7  postgresql-8.4  -g medium
 	                    
-      *`JBoss EAP 6.0`
+      **`JBoss EAP 6.0`**
 
         rhc app create -a $Your-App-Name -t jbosseap-6.0 mysql-5.1 -g medium
 	
@@ -44,9 +44,9 @@ Application Info
 Add this upstream jbossas7-liferay-quickstart repo
 --------------------------------------------------
 
-  cd $Your-App-Name
-  git remote add upstream -m master git://github.com/openshift/jbossas7-liferay-quickstart
-  git pull -s recursive -X theirs upstream master
+        cd $Your-App-Name
+        git remote add upstream -m master git://github.com/openshift/jbossas7-liferay-quickstart
+        git pull -s recursive -X theirs upstream master
 
   Then push the repo to your openshift cloud repo dir
 
@@ -54,7 +54,7 @@ Add this upstream jbossas7-liferay-quickstart repo
 
    That's it, you can now checkout your application at:
 
-       http://$Your-App-Name-$yournamespace.rhcloud.com
+        http://$Your-App-Name-$yournamespace.rhcloud.com
          
 __Note__ : 
 _Sometimes it takes longer time for the server to start and deploy, please watch the status of server on $OPENSHIFT_LOG_DIR/server.log.
