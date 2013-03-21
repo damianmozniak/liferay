@@ -21,31 +21,34 @@ Create a JBoss AS 7.1 or JBoss EAP 6.0 server
 
       *`JBoss AS 7.1`
 
-         rhc app create -a $Your-App-Name -t jbossas-7  mysql-5.1 -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
+        rhc app create -a $Your-App-Name -t jbossas-7  mysql-5.1 -g medium
 
-        rhc app create -a $Your-App-Name -t jbossas-7  postgresql-8.4  -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
+        rhc app create -a $Your-App-Name -t jbossas-7  postgresql-8.4  -g medium
 	                    
       *`JBoss EAP 6.0`
 
-         rhc app create -a $Your-App-Name -t jbosseap-6.0 mysql-5.1 -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
+        rhc app create -a $Your-App-Name -t jbosseap-6.0 mysql-5.1 -g medium
 	
-        rhc app create -a $Your-App-Name -t jbosseap-6.0 postgresql-8.4  -g medium --from-code=https://github.com/kameshsampath/jbossas7-liferay-quickstart.git
+        rhc app create -a $Your-App-Name -t jbosseap-6.0 postgresql-8.4  -g medium
     
 * Note: For deploying Liferay, the application max heap size should be set to 512m or above which is available only from medium and above gears, for more info check https://openshift.redhat.com/community/developers/pricing
 	
 Add DB Web Console to your application
 --------------------------------------
-          rhc app cartridge add -a $Your-App-Name -c phpmyadmin-3.4 (optional)
+          rhc cartridge add -a $Your-App-Name -c phpmyadmin-3.4 (optional)
 		
 Application Info
 ----------------
           rhc app show -a $Your-App-Name
 
+Add this upstream jbossas7-liferay-quickstart repo
+--------------------------------------------------
 
-Start the app
-----------------
+  cd $Your-App-Name
+  git remote add upstream -m master git://github.com/openshift/jbossas7-liferay-quickstart
+  git pull -s recursive -X theirs upstream master
 
-   Then push the repo to your openshift cloud repo dir
+  Then push the repo to your openshift cloud repo dir
 
         git push
 
