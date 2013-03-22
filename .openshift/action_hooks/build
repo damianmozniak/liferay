@@ -36,7 +36,7 @@ fi
 #
 _CUSTOMIZATION_DIR="${OPENSHIFT_REPO_DIR}/customization"
 
-if [ -e "${OPENSHIFT_DATA_DIR}/deployed-war-info" ]
+if [ -f "${OPENSHIFT_DATA_DIR}/deployed-war-info" ]
  then
   _LIFERAY_PORTAL_DEPLOYED=`head -1 ${OPENSHIFT_DATA_DIR}/deployed-war-info`
    echo "Last deployed WAR : ${_LIFERAY_PORTAL_DEPLOYED}"
@@ -46,7 +46,7 @@ fi
 if [ "$_LIFERAY_PORTAL_DEPLOYING" = "$_LIFERAY_PORTAL_DEPLOYED" ]
  then
    echo "Portal already deployed, updating portal-*.properties"
-   cp -ra ${_CUSTOMIZATION_DIR}/ROOT.war/* ${_LIFERAY_PORTAL_DEPLOY_DIR}/${_LIFERAY_PORTAL_DEPLOY_DIR}
+   cp -ra ${_CUSTOMIZATION_DIR}/ROOT.war/* ${_LIFERAY_PORTAL_DEPLOY_DIR}/$_LIFERAY_PORTAL_DEPLOYED
    echo "Portal properties/configuration successfully updated, please access the portal after 2-5 minutes"
  else
    echo "Downloading Liferay Portal : ${_LIFERAY_PORTAL_DEPLOYING}"
