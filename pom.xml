@@ -46,4 +46,16 @@
       </build>
     </profile>
   </profiles>
+  <repositories>
+  <repository>
+        <id>redhat-techpreview</id>
+        <url>https://maven.repository.redhat.com/techpreview/all</url>
+        <releases>
+           <enabled>true</enabled>
+        </releases>
+        <snapshots>
+          <enabled>false</enabled>
+        </snapshots>        
+     </repository>
+  </repositories>
 </project>
