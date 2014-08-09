@@ -53,7 +53,7 @@ then
  if ! /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" -e "select * from Account_;" "$OPENSHIFT_APP_NAME" > /dev/null 2>&1
   then
     echo
-    echo "Database '$OPENSHIFT_APP_NAME' found, importing 'portal-minimal-mysql.sql' into database '$OPENSHIFT_APP_NAME'."
+    echo "Database '$OPENSHIFT_APP_NAME' found, importing 'portal-mysql.sql' into database '$OPENSHIFT_APP_NAME'."
     echo
     /usr/bin/mysql -u "$OPENSHIFT_MYSQL_DB_USERNAME" --password="$OPENSHIFT_MYSQL_DB_PASSWORD" -h "$OPENSHIFT_MYSQL_DB_HOST" "$OPENSHIFT_APP_NAME" < "$OPENSHIFT_REPO_DIR/.openshift/action_hooks/portal-minimal-mysql.sql"
     echo
@@ -65,7 +65,7 @@ then
     echo "  !!!! Don't forget to change your portal admin(test@liferay.com) password!" !!!!
     echo "===================================================================================="
   else
-    echo "Database '$OPENSHIFT_APP_NAME' initialized already with 'portal-minimal-mysql.sql', skipping import."
+    echo "Database '$OPENSHIFT_APP_NAME' initialized already with 'portal-mysql.sql', skipping import."
   fi
 fi  
 
@@ -77,7 +77,7 @@ if [ "5432" = "$OPENSHIFT_POSTGRESQL_DB_PORT" ]
   if ! /usr/bin/psql -U "$OPENSHIFT_POSTGRESQL_DB_USERNAME" -w "$OPENSHIFT_POSTGRESQL_DB_PASSWORD" -h "$OPENSHIFT_POSTGRESQL_DB_HOST" -c "select * from $OPENSHIFT_APP_NAME.Account_" > /dev/null 2>&1
    then
     echo
-    echo "Database '$OPENSHIFT_APP_NAME' found, importing 'portal-minimal-postgresql.sql' into database '$OPENSHIFT_APP_NAME'."
+    echo "Database '$OPENSHIFT_APP_NAME' found, importing 'portal-postgresql.sql' into database '$OPENSHIFT_APP_NAME'."
     echo
     /usr/bin/psql -q -U "$OPENSHIFT_POSTGRESQL_DB_USERNAME" -w "$OPENSHIFT_POSTGRESQL_DB_PASSWORD" -h "$OPENSHIFT_POSTGRESQL_DB_HOST" -d "$OPENSHIFT_APP_NAME" -f "$OPENSHIFT_REPO_DIR/portal-minimal-postgresql.sql"
     echo
@@ -89,6 +89,6 @@ if [ "5432" = "$OPENSHIFT_POSTGRESQL_DB_PORT" ]
     echo "  !!!! Don't forget to change your portal admin(test@liferay.com) password !!!!"
     echo "======================================================================================="
   else
-    echo "Database '$OPENSHIFT_APP_NAME' initialized already with 'portal-minimal-postgresql.sql', skipping import."
+    echo "Database '$OPENSHIFT_APP_NAME' initialized already with 'portal-postgresql.sql', skipping import."
   fi
 fi 
